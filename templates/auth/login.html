@@ -1,0 +1,33 @@
+@extends 'base.html'
+
+
+@block jslibs
+<script src="{{ static_url('libs/jquery.form.min.js') }}"></script>
+@endblock
+
+
+@block js
+<script type="text/coffeescript"
+        src="{{ static_url('js/login.coffee') }}"></script>
+@endblock
+
+
+@block content
+<div class="row">
+    <form class="col-md-8 col-md-offset-2" id="form-login" method="post"
+        data-next="{{ next }}">
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" required
+                placeholder="登录名">
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" name="password"
+                required placeholder="登录密码">
+        </div>
+
+        <button type="submit" class="btn btn-primary">登录</button>
+        <a href="/auth/signup" class="dbtn btn-defaults">注册</a>
+    </form>
+</div>
+@endblock

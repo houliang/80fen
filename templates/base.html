@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {#
+    <link rel="shortcut icon" href="{{ static_url('img/favicon.ico') }}">
+    #}
+
+    <link rel="stylesheet"
+          href="{{ static_url('libs/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ static_url('libs/font-awesome/css/font-awesome.min.css') }}">
+
+    @block csslibs
+    @endblock
+
+    <link rel="stylesheet/less" href="{{ static_url('css/base.less') }}">
+
+    @block css
+    @endblock
+
+    <title>
+        @block title
+        @endblock
+    </title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="content">
+            @block content
+            @endblock
+        </div>
+    </div>
+    <footer>
+        @block footer
+        @endblock
+    </footer>
+
+<script src="{{ static_url('libs/jquery-2.0.3.min.js') }}"></script>
+<script src="{{ static_url('libs/coffeescript-1.6.3.min.js') }}"></script>
+<script src="{{ static_url('libs/less-1.5.0.min.js') }}"></script>
+
+@block jslibs
+@endblock
+
+<script type="text/coffeescript"
+        src="{{ static_url('js/base.coffee') }}"></script>
+
+@block js
+@endblock
+</body>
+</html>

@@ -1,0 +1,8 @@
+Jinja2==2.7.2
+MarkupSafe==0.18
+argparse==1.2.1
+backports.ssl-match-hostname==3.4.0.2
+pycket==0.3.0
+redis==2.9.0
+tornado==3.2
+wsgiref==0.1.2

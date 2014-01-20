@@ -1,0 +1,66 @@
+.chatbox {
+    padding-left: 0;
+    overflow-y: auto;
+    max-height: 500px;
+    .media-body {
+        max-height: 100px;
+        word-wrap: break-word;
+        word-break: normal;
+    }
+    li {
+        padding: 5px 0;
+    }
+}
+
+
+#ready {
+    text-align: center;
+    a {
+        @h: 80px;
+        width: @h;
+        height: @h;
+        line-height: @h;
+    }
+    .w, .e {
+        margin: 15px 50px;
+    }
+}
+
+
+#fighting {
+    text-align: center;
+}
+
+
+.card-img {
+    height: 87px;
+    margin-left: -48px;
+    &:first-child {
+        //margin-left: 0;
+    }
+}
+
+
+#mycards > span {
+    width: 0;
+    height: 0;
+    margin-left: -4px;
+}
+
+#pos-n {
+    height: 40px;
+}
+#pos-w {
+    height: 350px;
+    float: left;
+}
+#pos-e {
+    height: 350px;
+    float: right;
+}
+
+
+#toolbar {
+    text-align: right;
+    margin-bottom: 10px;
+}

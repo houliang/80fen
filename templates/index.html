@@ -1,0 +1,23 @@
+@extends 'base.html'
+
+
+@block js
+<script type="text/coffeescript"
+        src="{{ static_url('js/index.coffee') }}"></script>
+@endblock
+
+
+@block content
+<div class="row">
+    <div class="col-md-offset-4 col-md-8">
+        @if username
+        <p>你好， {{ username }}</p>
+        <a href="/80">80分</a> |
+        <a href="/auth/logout">登出</a>
+        @else
+        <a href="/auth/login">登录</a>
+        <a href="/auth/signup">注册</a>
+        @endif
+    </div>
+</div>
+@endblock

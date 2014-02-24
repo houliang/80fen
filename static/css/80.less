@@ -1,3 +1,7 @@
+body {
+    padding-top: 10px;
+}
+
 .chatbox {
     padding-left: 0;
     overflow-y: auto;
@@ -27,40 +31,159 @@
 }
 
 
-#fighting {
-    text-align: center;
+.card-img {
+    height: 70px;
+    margin-left: -39px;
+    &:first-child {
+        margin-left: 0 !important;
+    }
 }
 
-
-.card-img {
-    height: 87px;
-    margin-left: -48px;
-    &:first-child {
-        //margin-left: 0;
+.backs {
+    .card-img {
+        height: 50px;
+        margin-left: -28px;
     }
 }
 
 
-#mycards > span {
-    width: 0;
-    height: 0;
-    margin-left: -4px;
+.rotate(@deg) {
+    transform: rotate(@deg);
+    -webkit-transform: rotate(@deg);
+    -o-transform: rotate(@deg);
+    -moz-transform: rotate(@deg);
 }
 
-#pos-n {
-    height: 40px;
+
+#fighting {
+    text-align: center;
+    .seat {
+        text-align: center;
+        display: inline-block;
+        &.lr {
+            height: 260px;
+            display: table-cell;
+            vertical-align: middle;
+            &.lr-left {
+                padding-right: 0;
+            }
+            &.lr-right {
+                padding-left: 0;
+            }
+            .liang, .zhuang {
+                display: block;
+                margin-top: 5px;
+            }
+        }
+        @m: 15px;
+        &.pull-right {
+            margin-left: @m;
+        }
+        &.pull-left {
+            margin-right: @m;
+        }
+    }
+    .cards, .backs {
+        &.rotate {
+            height: 260px;
+            display: table-cell;
+            vertical-align: middle;
+            .card-img {
+                display: block;
+                margin-top: -41px;
+                margin-left: 0;
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+            &.cards {
+                width: 70px;
+                .card-img {
+                    margin-top: -56px;
+                    &:first-child {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+        @w: 20px;
+        &.rotate-left .card-img {
+            .rotate(90deg);
+            margin-left: @w !important;
+        }
+        &.rotate-right .card-img {
+            .rotate(-90deg);
+            margin-right: @w !important;
+        }
+    }
+    .public {
+        padding-top: 19%;
+    }
 }
-#pos-w {
-    height: 350px;
-    float: left;
+
+#opbar {
 }
-#pos-e {
-    height: 350px;
-    float: right;
+
+.red {
+    color: red;
+}
+
+.black {
+    color: black;
+}
+
+#pos-up {
+    .seat {
+        margin-bottom: 10px;
+    }
+}
+
+#pos-up, #pos-bottom {
+    .cards {
+        height: 70px;
+    }
+}
+
+#pos-left {
+    text-align: left;
+}
+
+#pos-right {
+    text-align: right;
+    .player {
+        padding-left: 16px;
+    }
+}
+
+
+#mycards {
+    height: 80px;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    & > span {
+        width: 0;
+        height: 0;
+        margin-left: -4px;
+    }
+    position: relative;
+    .card-img {
+        position: relative;
+        bottom: -10px;
+        &.tall {
+            margin-bottom: 10px;
+        }
+    }
 }
 
 
 #toolbar {
     text-align: right;
-    margin-bottom: 10px;
+    margin: 10px auto;
+}
+
+#opbar {
+    margin: 10px auto;
 }

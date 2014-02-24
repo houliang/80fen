@@ -21,17 +21,16 @@
 @block content
 <div class="row">
     <div class="col-md-2">
-        {{ lipsum()[:400] }}
+        <a class="btn btn-primary" id="debug-refresh">刷新</a>
     </div>
     <div class="col-md-7">
         @set ready = [False]
-        @for p, nick in pos.iteritems()
-            @if nick == current_nick
+        @for p, ws in pos.iteritems()
+            @if ws.current_nick == current_nick
                 @if ready.append(True)
                 @endif
             @endif
         @endfor
-
         @set ready = ready[-1]
 
         <div id="ready" class="panel panel-default">
@@ -39,26 +38,26 @@
             <div class="panel-body">
 
                 @macro one(p)
-                @set nickname = pos[p].current_nick
-                @if nickname
-                    <a data-pos="{{ p }}"
-                        class="{{ p }} btn btn-default disabled" href="#!">
-                        {{ nickname }}
-                    </a>
-                @else
-                    @if ready
+                    @set nickname = pos[p].current_nick
+                    @if nickname
                         <a data-pos="{{ p }}"
-                            class="{{ p }} btn disabled btn-primary"
-                            href="#!">
-                            稍等
+                            class="{{ p }} btn btn-default disabled" href="#!">
+                            {{ nickname }}
                         </a>
                     @else
-                        <a data-pos="{{ p }}"
-                            class="{{ p }} btn btn-primary" href="#!">
-                            坐下
-                        </a>
+                        @if ready
+                            <a data-pos="{{ p }}"
+                                class="{{ p }} btn disabled btn-primary"
+                                href="#!">
+                                稍等
+                            </a>
+                        @else
+                            <a data-pos="{{ p }}"
+                                class="{{ p }} btn btn-primary" href="#!">
+                                坐下
+                            </a>
+                        @endif
                     @endif
-                @endif
                 @endmacro
 
                 {{ one('n') }}<br>
@@ -68,32 +67,94 @@
             </div>
         </div>
 
+
+@macro player(current_nick='', rotate='')
+@macro seat()
+<div class="seat {{ rotate and 'lr lr-' ~ rotate }}">
+    <span class="nick">{{ current_nick }}</span>
+    <span class="zhuang hide label label-info">庄</span>
+    <span class="liang hide label label-warning">亮</span>
+    <span class="liang1 hide"></span>
+    <span class="liang2 hide"></span>
+</div>
+@endmacro
+
+@macro backs()
+@if not current_nick
+<div class="backs {{ rotate and 'rotate rotate-' ~ rotate }}"></div>
+@endif
+@endmacro
+
+@macro cards()
+<div class="cards {{ rotate and 'rotate rotate-' ~ rotate }}"></div>
+@endmacro
+
+<div class="player">
+    @if current_nick
+        {{ cards() }}{{ seat() }}
+    @elif rotate == 'right'
+        {{ cards() }}{{ backs() }}{{ seat() }}
+    @else
+        {{ seat() }}{{ backs() }}{{ cards() }}
+    @endif
+</div>
+@endmacro
+
         <div id="fighting" class="panel panel-default">
-            <div class="panel-heading">战斗区</div>
+            @#<div class="panel-heading">战斗区</div>
             <div class="panel-body">
+                <div id="pos-up">
+                    {{ player() }}
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="row">
+                    <div id="pos-left" class="col-md-4">
+                        {{ player(rotate='left') }}
+                    </div>
+
+                    <div class="public col-md-4">
+                        <span class="countdown hide label label-danger">5</span>
+                        <span class="message"></span>
+
+                        <div class="msg t">t</div>
+                        <div class="row">
+                            <div class="col-md-4 msg l">l</div>
+                            <div class="col-md-4 msg c">c</div>
+                            <div class="col-md-4 msg r">r</div>
+                        </div>
+                        <div class="msg b">b</div>
+                    </div>
+
+                    <div id="pos-right" class="col-md-4">
+                        {{ player(rotate='right') }}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="pos-bottom">
+                    {{ player(current_nick) }}
+                </div>
+
                 <div id="toolbar">
-                    <a data-color="s" class="btn btn-default disabled s"
-                        href="#!">&spades;</a>
-                    <a data-color="h" class="btn btn-default disabled h"
-                        href="#!">&hearts;</a>
-                    <a data-color="c" class="btn btn-default disabled c"
-                        href="#!">&clubs;</a>
-                    <a data-color="d" class="btn btn-default disabled d"
-                        href="#!">&diams;</a>
-                    <a data-color="O" class="btn btn-default disabled O"
-                        href="#!">NT</a>
+                    @macro tool(color)
+                    @set map = {'s': '&spades;', 'h': '&hearts;',
+                        'c': '&clubs;', 'd': '&diams;', 'O': 'NT'
+                    }
+                    <a class="btn btn-default disabled {{ color }}"
+                        data-color="{{ color }}">{{ map[color]|safe }}</a>
+                    @endmacro
+                    {{ tool('s') }}
+                    {{ tool('h') }}
+                    {{ tool('c') }}
+                    {{ tool('d') }}
+                    {{ tool('O') }}
                 </div>
-                <div id="pos-n">
-                    <span class="avatar"></span>
+                <div id="opbar" class="hide">
+                    <a class="btn btn-primary mai">埋了</a>
+                    <a class="btn chupai btn-default disabled">出牌</a>
+                    @#<a class="btn tip btn-default disabled">提示</a>
                 </div>
-                <div class="clearfix"></div>
-                <div id="pos-w">
-                    <span class="avatar"></span>
-                </div>
-                <div id="pos-e">
-                    <span class="avatar"></span>
-                </div>
-                <div class="clearfix"></div>
                 <div id="mycards">
                     <span class="O"></span>  {# 主 #}
                     <span class="s"></span>  {# 黑 #}
@@ -102,8 +163,11 @@
                     <span class="d"></span>  {# 方 #}
                 </div>
             </div>
+            {#
             <div class="panel-footer">
+                {{ current_nick }}
             </div>
+            #}
         </div>
     </div>
     <div class="col-md-3">

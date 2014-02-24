@@ -171,6 +171,10 @@ class WebSocket(Handler, tornado.websocket.WebSocketHandler):
             num = message['num']
             cl = g.s80.current_liang
             suc = False
+
+            # TODO: 检查color与point以及num是否在当前玩家的牌里
+            pass
+
             if liang == 'hO':  # 两个大王
                 suc = True
             elif liang == 'sO':  # 两个小王
@@ -191,9 +195,48 @@ class WebSocket(Handler, tornado.websocket.WebSocketHandler):
                 message['point'] = point
                 message['suc'] = True
                 WebSocket.broadcast(message)
+                if g.s80.is_first:
+                    g.s80.is_first = False
+                    g.s80.last_zhuang = g.s80.current_zhuang = self
+                    n = self.current_nick
+                    WebSocket.broadcast({'type': 'zhuang', 'who': n})
             else:
                 self.write_message({'type': 'liangzhu', 'suc': False})
-
+        elif _ == 'fapai-over':  # 发牌完毕
+            self.fapai_over = True
+            four_over = True
+            for c in WebSocket.clients:
+                if not hasattr(c, 'fapai_over'):
+                    four_over = False
+                    break
+            if four_over:
+                WebSocket.broadcast({'type': 'countdown'})  # 倒计时
+        elif _ == 'liang-over':  # 亮主完毕
+            self.liang_over = True
+            four_over = True
+            for c in WebSocket.clients:
+                if not hasattr(c, 'liang_over'):
+                    four_over = False
+                    break
+            if four_over:
+                if self.s80.current_liang['num'] == 0:
+                    raise ValueError('nobody Liang Zhu...')
+                zhuang = self.s80.current_zhuang
+                zhuang.write_message({
+                    'type': 'di', 'di': [d.js() for d in self.s80.di]})  # 底
+                n = zhuang.current_nick
+                for c in WebSocket.clients:
+                    if c != zhuang:
+                        c.write_message({'type': 'wait-maidi', 'zhuang': n})
+        elif _ == 'refreshall':  # 刷新所有页面
+            # 调试用(重新生成牌)： TODO: 删除下面两句话
+            from pokers.shengjilib import S80
+            g.s80 = S80.refresh()
+            WebSocket.broadcast({'type': 'refresh'})
+        elif _ == 'maidi':  # 埋底
+            self.s80.make_di(message['di'])
+            WebSocket.broadcast({'type': 'chupai',
+                'who': self.s80.current_zhuang.current_nick})
         else:
             self.write_message({'type': 'lol'})
 
